@@ -24,12 +24,20 @@ module View
       Square.new(
           x: food.col * @pixel_size,
           y: food.row * @pixel_size,
-          color:'yellow'
+          color: 'yellow'
       )
     end
 
     def render_snake(state)
-
+      extend Ruby2D::DSL
+      snake = state.snake
+      snake.positions.each do |position|
+        Square.new(
+            x: position.col * @pixel_size,
+            y: position.row * @pixel_size,
+            color: 'green'
+        )
+      end
     end
   end
 end
