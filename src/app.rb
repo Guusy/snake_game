@@ -1,14 +1,8 @@
-require 'ruby2d'
+require_relative './view/ruby2d'
+require_relative './model/state'
 
-set title: "snake game"
+view = View::Ruby2dView.new
 
-set width:800 , heigth: 800
+initial_state = Model::init_state
 
-Triangle.new(
-    x1: 320, y1:  50,
-    x2: 540, y2: 430,
-    x3: 100, y3: 430,
-    color: ['red', 'green', 'blue']
-)
-
-show
+view.render(initial_state)
