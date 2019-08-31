@@ -4,7 +4,9 @@ module Actions
     next_direction = state.current_direction
     next_position = calc_next_position(state)
     # verify the next pixel is valid and move or if not valid, finish the game.
-    if position_is_valid?(state, next_position)
+    if position_is_food?(state, next_position)
+      grow_snake_too(state, next_position)
+    elsif position_is_valid?(state, next_position)
       return move_snake_to(state, next_position)
     else
       return end_game(state)
@@ -21,6 +23,10 @@ module Actions
   end
 
   private
+
+  def self.position_is_food?(state, next_position)
+    state.food.row == next_position.row && state.food.col == next_position.col
+  end
 
   def self.calc_next_position(state)
     current_position = state.snake.positions.first
@@ -72,6 +78,11 @@ module Actions
       return true if direction != Model::Direction::RIGHT
     end
     return false
+  end
+
+  def self.grow_snake_too(state, next_position)
+    state.snake.positions = [next_position] + state.snake.positions
+    state
   end
 
 end
