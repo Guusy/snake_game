@@ -1,9 +1,11 @@
 require 'ruby2d'
+require_relative '../model/state'
 
 module View
   class Ruby2dView
-    def initialize
+    def initialize(app)
       @pixel_size = 50
+      @app = app
     end
 
     def start(state)
@@ -22,24 +24,44 @@ module View
     private
 
     def render_food(state)
+      @food.remove if @food
       extend Ruby2D::DSL
       food = state.food
-      Square.new(
+      @food = Square.new(
           x: food.col * @pixel_size,
           y: food.row * @pixel_size,
           color: 'yellow'
       )
+      on :key_down do |event|
+        handle_key_event(event.key)
+      end
     end
 
     def render_snake(state)
+      @snake_positions.each(&:remove) if @snake_positions
       extend Ruby2D::DSL
       snake = state.snake
-      snake.positions.each do |position|
+      @snake_positions = snake.positions.map do |position|
         Square.new(
             x: position.col * @pixel_size,
             y: position.row * @pixel_size,
             color: 'green'
         )
+      end
+    end
+
+    private
+
+    def handle_key_event(key)
+      case key
+      when "up"
+        @app.send_action(:change_direction, Model::Direction::UP)
+      when "down"
+        @app.send_action(:change_direction, Model::Direction::DOWN)
+      when "left"
+        @app.send_action(:change_direction, Model::Direction::LEFT)
+      when "right"
+        @app.send_action(:change_direction, Model::Direction::RIGHT)
       end
     end
   end
