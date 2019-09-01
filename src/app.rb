@@ -8,8 +8,9 @@ class App
 
   def start
     @view = View::Ruby2dView.new(self)
-    Thread.new { init_timer }
+    timer_thread = Thread.new { init_timer }
     @view.start(@state)
+    timer_thread.join
   end
 
   def init_timer
