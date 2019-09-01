@@ -6,6 +6,7 @@ module Actions
     # verify the next pixel is valid and move or if not valid, finish the game.
     if position_is_food?(state, next_position)
       grow_snake_too(state, next_position)
+      generate_food(state)
     elsif position_is_valid?(state, next_position)
       return move_snake_to(state, next_position)
     else
@@ -23,6 +24,12 @@ module Actions
   end
 
   private
+
+  def self.generate_food(state)
+    new_food = Model::Food.new(rand(state.grid.rows), rand(state.grid.cols))
+    state.food = new_food
+    state
+  end
 
   def self.position_is_food?(state, next_position)
     state.food.row == next_position.row && state.food.col == next_position.col
